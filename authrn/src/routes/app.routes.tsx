@@ -5,7 +5,7 @@ import Dashboard from '../pages/Dashboard';
 
 const AppStack = createStackNavigator();
 
-const AppRoutes = () => (
+const AppRoutes: React.FC = () => (
   <AppStack.Navigator>
     <AppStack.Screen name="Dashboard" component={Dashboard} />
   </AppStack.Navigator>
