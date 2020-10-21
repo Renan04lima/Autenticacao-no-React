@@ -1,13 +1,9 @@
 import React from "react";
-import { View, Button, StyleSheet } from "react-native";
+import { Container, Header, Left, Body, Right, Title, Content, Input, Item, Button, Text, Footer, FooterTab } from 'native-base';
+import { View } from 'react-native';
 import { useAuth } from "../../contexts/auth";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-});
+import { styles } from "./styles"
 
 const SignIn: React.FC = () => {
   const { signIn } = useAuth();
@@ -17,9 +13,40 @@ const SignIn: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Button title="Sign In" onPress={handleSign} />
-    </View>
+    <Container>
+      <Header transparent style={styles.header}>
+        <Title style={styles.color}>Login</Title>
+      </Header>
+      <Content padder contentContainerStyle={styles.content}>
+        <View style={styles.boxLogin}>
+          <Text style={styles.text}>Acesse a sua conta</Text>
+          <Item
+            regular
+            style={styles.input}
+          >
+            <Input placeholder='Usuário' />
+          </Item>
+          <Item
+            regular
+            style={styles.input}
+          >
+            <Input placeholder='Senha' />
+          </Item>
+          <Button
+            block
+            style={styles.button}
+            onPress={handleSign}
+          >
+            <Text>Entrar</Text>
+          </Button>
+        </View>
+      </Content>
+      <View style={styles.footer}>
+        <Button block transparent>
+          <Text>Não possui uma conta?</Text>
+        </Button>
+      </View>
+    </Container>
   );
 };
 
