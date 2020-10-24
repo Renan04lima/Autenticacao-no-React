@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
   box1: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    margin: 10,
   },
   button: {
     paddingHorizontal: 10,

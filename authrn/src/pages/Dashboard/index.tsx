@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
       <Content padder contentContainerStyle={styles.content}>
         <View style={styles.box1}>
           <Text style={styles.title}>Produtos</Text>
-          <Button style={styles.button}>
+          <Button style={styles.button} onPress={handlerNavigateInNewItem}>
             <Text>Novo</Text>
           </Button>
         </View>
@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
           </View>
           <View style={styles.boxButton}>
             <Icon
-              onPress={handlerNavigateInNewItem}
+              onPress={handlerNavigateInEditItem}
               name="edit"
               size={20}
               color="#003e8b"
