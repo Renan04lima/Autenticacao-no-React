@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Header,
@@ -9,21 +9,36 @@ import {
   Button,
   Text,
 } from 'native-base';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import {useAuth} from '../../contexts/auth';
 import {useNavigation} from '@react-navigation/native';
+import HttpService from '../../services/HttpService';
 
 import {styles} from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const SignIn: React.FC = () => {
-  const {signIn} = useAuth();
-
-  function handleSign() {
-    signIn();
+const SignUp: React.FC = () => {
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const {signIn, signUp} = useAuth();
+  const {goBack} = useNavigation();
+  
+  function handleSignUp() {
+    signUp({
+      nome,
+      login: email,
+      senha
+    })
+    // HttpService.insert('user/', {
+    //   nome,
+    //   login: email,
+    //   senha
+    // }).then((response: any)=> {
+    //   console.log(response) 
+    // }).catch(()=>Alert.alert('Erro', 'Error ao cadastrar'))
   }
 
-  const {goBack} = useNavigation();
 
   function handlerNavigateInLogin() {
     goBack();
@@ -46,18 +61,18 @@ const SignIn: React.FC = () => {
       <Content padder contentContainerStyle={styles.content}>
         <View style={styles.boxLogin}>
           <Item regular style={styles.input}>
-            <Input placeholder="Nome" />
+            <Input placeholder="Nome" onChangeText={e => setNome(e)} value={nome} />
           </Item>
           <Item regular style={styles.input}>
-            <Input placeholder="Email" />
+            <Input placeholder="Email" onChangeText={e => setEmail(e)} value={email} />
           </Item>
           <Item regular style={styles.input}>
-            <Input placeholder="Senha" />
+            <Input placeholder="Senha" onChangeText={e => setSenha(e)} value={senha}/>
           </Item>
         </View>
       </Content>
       <View style={styles.footer}>
-        <Button block style={styles.button} onPress={handleSign}>
+        <Button block style={styles.button} onPress={handleSignUp}>
           <Text>Cadastrar</Text>
         </Button>
       </View>
@@ -65,4 +80,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Header,
@@ -12,20 +12,45 @@ import {
   Form,
 } from 'native-base';
 import {View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {styles} from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import HttpService from '../../services/HttpService';
+import { useAuth } from '../../contexts/auth';
+
+interface IProducts {
+  titulo: string,
+  descricao: string
+}
+
+interface IRoute {
+  id: number;
+}
 
 const EditItem: React.FC = () => {
+  const route = useRoute()
+  const [nome, setNome] = useState(route.params.product.titulo);
+  const [descricao, setDescricao] = useState(route.params.product.descricao);
   const {goBack} = useNavigation();
+  const navigation = useNavigation();
+  const {setHasNewItem} = useAuth();
 
   function handlerNavigateInDashboard() {
     goBack();
   }
 
   function handlerEditItem() {
-    goBack();
+    HttpService.patch('product/{id}', {id: route.params.product.id}, {
+      titulo: nome,
+      descricao
+    }).then((response: any) => {
+      console.log(response)
+    }).catch((err: any) => console.log(err))
+    // console.log('test', descricao)
+    // console.log('test', nome)
+    setHasNewItem(true)
+    navigation.navigate('Dashboard')
   }
 
   return (
@@ -45,7 +70,7 @@ const EditItem: React.FC = () => {
       <Content padder contentContainerStyle={styles.content}>
         <View style={styles.boxLogin}>
           <Item regular style={styles.input}>
-            <Input placeholder="Nome" />
+            <Input placeholder="Nome" onChangeText={e => setNome(e)} value={nome}/>
           </Item>
           <Form>
             <Textarea
@@ -54,6 +79,7 @@ const EditItem: React.FC = () => {
               rowSpan={5}
               bordered
               placeholder="Descrição"
+              onChangeText={e => setDescricao(e)} value={descricao}
             />
           </Form>
         </View>

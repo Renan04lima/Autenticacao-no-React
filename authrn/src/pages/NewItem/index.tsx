@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Header,
@@ -11,21 +11,35 @@ import {
   Textarea,
   Form,
 } from 'native-base';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
+import HttpService from '../../services/HttpService';
 import {useNavigation} from '@react-navigation/native';
 
 import {styles} from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useAuth } from '../../contexts/auth';
 
 const NewItem: React.FC = () => {
-  const {goBack} = useNavigation();
+  const [nome, setNome] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const {user, response, setHasNewItem} = useAuth();
+  const {navigate, goBack} = useNavigation();
 
   function handlerNavigateInDashboard() {
+    // console.log(response.token)
     goBack();
   }
 
-  function handlerNewItem() {
-    goBack();
+   function handlerNewItem() {
+     HttpService.insert('product/', {
+      titulo: nome,
+      descricao,
+    } ).then((res: any)=> {
+      console.log('response:',res) 
+      // console.log('token:',response.token) 
+      navigate('Dashboard')
+      setHasNewItem(true)
+    }).catch((err)=>console.log('Erro', err))
   }
 
   return (
@@ -45,7 +59,7 @@ const NewItem: React.FC = () => {
       <Content padder contentContainerStyle={styles.content}>
         <View style={styles.boxLogin}>
           <Item regular style={styles.input}>
-            <Input placeholder="Nome" />
+            <Input placeholder="Nome" onChangeText={e => setNome(e)} value={nome}/>
           </Item>
           <Form>
             <Textarea
@@ -54,6 +68,8 @@ const NewItem: React.FC = () => {
               rowSpan={5}
               bordered
               placeholder="Descrição"
+              onChangeText={e =>{setDescricao(e)}}
+              value={descricao}
             />
           </Form>
         </View>

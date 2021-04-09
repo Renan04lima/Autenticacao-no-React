@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Header,
@@ -9,20 +9,32 @@ import {
   Button,
   Text,
 } from 'native-base';
-import {View} from 'react-native';
-import {useAuth} from '../../contexts/auth';
-import {useNavigation} from '@react-navigation/native';
+import { Alert, View } from 'react-native';
+import { useAuth, User } from '../../contexts/auth';
+import { useNavigation } from '@react-navigation/native';
+import { withFormik } from 'formik';
+import {ResponseType} from 'axios'
 
-import {styles} from './styles';
+import { styles } from './styles';
+import HttpService from '../../services/HttpService';
 
 const SignIn: React.FC = () => {
-  const {signIn} = useAuth();
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const { signIn } = useAuth();
+  const { navigate } = useNavigation();
 
-  function handleSign() {
-    signIn();
+  const userTeste = {
+    login: 'teste@gmail.com',
+    senha: '123456',
   }
-
-  const {navigate} = useNavigation();
+  function handleSignIn() {
+    // signIn(userTeste)
+    signIn({
+      login: email,
+      senha
+    });
+  }
 
   function handlerNavigateInSignUp() {
     navigate('SignUp');
@@ -37,12 +49,12 @@ const SignIn: React.FC = () => {
         <View style={styles.boxLogin}>
           <Text style={styles.text}>Acesse a sua conta</Text>
           <Item regular style={styles.input}>
-            <Input placeholder="Usuário" />
+            <Input placeholder="Usuário" onChangeText={e => { setEmail(e) }} value={email} />
           </Item>
           <Item regular style={styles.input}>
-            <Input placeholder="Senha" />
+            <Input placeholder="Senha" onChangeText={e => { setSenha(e) }} value={senha} secureTextEntry />
           </Item>
-          <Button block style={styles.button} onPress={handleSign}>
+          <Button block style={styles.button} onPress={handleSignIn}>
             <Text>Entrar</Text>
           </Button>
         </View>
